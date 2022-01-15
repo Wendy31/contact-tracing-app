@@ -1,5 +1,50 @@
 public with sharing class CTPersonController {
-    public CTPersonController() {
-
+    public static String getToken(String mobile){
+    // generate unique hash using MD5 hashing
+    // use method generateDigest() to create one way hash, same input will always generate same output
+        Blob mobileValue = Blob.valueOf(mobile);
+        Blob hash = Crypto.generateDigest('MD5', mobileValue);
+    // get string value of hash blob
+        String token = EncodingUtil.base64Encode(hash);
+    // return string token to method caller
+        return token;
     }
+
+    public static List<Person__c> getRecentHealthChanges(){
+        // query person records, limit result to 100
+        // sort by status update date in desc order
+        // return list of person records
+        return [SELECT Id, Name, Health_Status__c, Mobile__c, Status_Update_Date__c, Token__c
+                FROM Person__c
+                ORDER BY Status_Update_Date__c DESC NULLS LAST
+                LIMIT 100];
+        
+    }
+
+    public static List<Person__c> searchPeople(String searchTerm){
+        // query person records where name, mobile, token matches searchTerm
+        // sort by status update date in desc order
+        // return list of person records
+        searchTerm = searchTerm + '%';
+        return [SELECT Id, Name, Health_Status__c, Mobile__c, Status_Update_Date__c, Token__c
+                FROM Person__c
+                WHERE Name LIKE :searchTerm 
+                OR Mobile__c LIKE :searchTerm
+                OR Token__c LIKE :searchTerm
+                ORDER BY Status_Update_Date__c DESC NULLS LAST];
+    }
+
+    public static Person__c getPersonById(String personId){
+        // query a person record where ID matches personId
+        // return the person record
+        List<Person__c> people = [SELECT Id, Name, Health_Status__c, Mobile__c, Status_Update_Date__c, Token__c
+                FROM Person__c
+                WHERE Id = :personId];
+        if (people != null && people.size() > 0) {
+            return people[0];
+        } else {
+            return null;
+        }
+    }
+
 }
