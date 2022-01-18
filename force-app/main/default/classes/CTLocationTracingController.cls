@@ -64,15 +64,15 @@ public with sharing class CTLocationTracingController {
                 // add all personIds to map set by the given locationId from the map
                 mapOfExistingRecs.get(trace.Location__c).add(trace.Person__c);   
             }  
-        }
 
-        List<Location_Tracing__c> duplicates = new List<Location_Tracing__c>();
-        // loop over newLoctionTraces and check if locationId and personId are found in Map
-        // if record contains BOTH locationId and PersonId then its a duplicate
-        for (Location_Tracing__c trace : newLoctionTraces) {
-            if (mapOfExistingRecs.containsKey(trace.Location__c) && mapOfExistingRecs.get(trace.Location__c).contains(trace.Person__c)) {
-                duplicates.add(trace);  
-            } 
+            List<Location_Tracing__c> duplicates = new List<Location_Tracing__c>();
+            // loop over newLoctionTraces and check if locationId and personId are found in Map
+            // if record contains BOTH locationId and PersonId then its a duplicate
+            for (Location_Tracing__c trace : newLoctionTraces) {
+                if (mapOfExistingRecs.containsKey(trace.Location__c) && mapOfExistingRecs.get(trace.Location__c).contains(trace.Person__c)) {
+                    duplicates.add(trace);  
+                } 
+            }
         }
         return duplicates;
     }

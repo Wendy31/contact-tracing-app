@@ -47,4 +47,20 @@ public with sharing class CTPersonController {
         }
     }
 
+    public static Map<String,Integer> getHealthStatusCount(){
+        // query to find number of people in each health status
+        // store result in map, the count of people in each status
+        // return map
+        Map<String, Integer> mapOfHealthSatusCount = new Map<String,Integer>();
+        
+        AggregateResult[] groupResult = [SELECT Health_Status__c, COUNT(Id) total // must give alias to use aggregated fields
+        FROM Person__c
+        GROUP BY Health_Status__c];
+
+        for(AggregateResult result : groupResult){
+            mapOfHealthSatusCount.put((String)result.get('Health_Status__c'), (Integer)result.get('total')); // typecas from type object to correct data type, as get method returns type object
+        }
+        return mapOfHealthSatusCount;
+    }
+
 }
