@@ -6,14 +6,14 @@ switch on trigger.operationType {
     when BEFORE_UPDATE {
         CTPersonTriggerHandler.beforeUpdate(Trigger.new, Trigger.oldMap);
     }
+    when AFTER_UPDATE {
+        CTPersonTriggerHandler.afterUpdate(Trigger.new, Trigger.oldMap);
+    }
     when BEFORE_DELETE { 
 
     }
     when AFTER_INSERT {
         
-    }
-    when AFTER_UPDATE {
-
     }
     when AFTER_DELETE {
 

@@ -63,4 +63,104 @@ public with sharing class CTPersonController {
         return mapOfHealthSatusCount;
     }
 
+    // method to get the cohabitants of the people passed.
+    // these people can not be their own cohabitant, so check for any duplicates
+    // only get cohabitants that are not already red or orange statuses
+    // check for both person 1 and person 2
+    public static Set<Id> getCohabitants(Set<Id> personIds) {
+        List<String> healthStatuses = new List<String>{'Green', 'Yellow'};
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
+                                                FROM People_Tracing__c
+                                                WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
+                                                AND Contact_Type_c = 'Cohabitant'
+                                                AND (Person_1__r.Health_Status__c IN :healthStatuses OR Person_2__r.Health_Status__c IN :healthStatuses)];
+
+        // make sure we dont return the same person as their own cohabitant
+        Set<Id> cohabitantsId = new Set<Id>();                        
+        for (People_Tracing__c peopleTrace : peopleTraces) {
+            if (!personIds.contains(peopleTrace.Person_1__c)) {
+                cohabitantsId.add(peopleTrace.Person_1__c);
+            }
+
+            if (!personIds.contains(peopleTrace.Person_2__c)) {
+                cohabitantsId.add(peopleTrace.Person_2__c);
+            }  
+        } 
+        return cohabitantsId;
+    }
+
+    // get neightbours of the personIds passed in
+    public static Set<Id> getNeighbours(Set<Id> personIds) {
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
+                                                FROM People_Tracing__c
+                                                WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
+                                                AND Contact_Type_c = 'Neighbour'
+                                                AND (Person_1__r.Health_Status__c = 'Green' OR Person_2__r.Health_Status__c = 'Green')];
+
+        // make sure we dont return the same person as their own neighbour
+        Set<Id> neighboursId = new Set<Id>();                        
+        for (People_Tracing__c peopleTrace : peopleTraces) {
+            if (!personIds.contains(peopleTrace.Person_1__c)) {
+                neighboursId.add(peopleTrace.Person_1__c);
+            }
+
+            if (!personIds.contains(peopleTrace.Person_2__c)) {
+                neighboursId.add(peopleTrace.Person_2__c);
+            }  
+        } 
+        return neighboursId;
+    }
+
+    // get primary contacts of the personIds passed in
+    // primary contact = other
+    // must add condition to only get contacts that have been in contact with the last 10 days
+    // health status †hat is not red and orange
+    public static Set<Id> getPrimaryContacs(Set<Id> personIds) {
+        List<String> healthStatuses = new List<String>{'Green', 'Yellow'};
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
+                                                FROM People_Tracing__c
+                                                WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
+                                                AND Contact_Type_c = 'Other'
+                                                AND Contact_Date__c = LAST_N_DAYS :10
+                                                AND (Person_1__r.Health_Status__c IN :healthStatuses OR Person_2__r.Health_Status__c IN :healthStatuses)];
+
+        Set<Id> primaryContacts = new Set<Id>();                        
+        for (People_Tracing__c peopleTrace : peopleTraces) {
+            if (!personIds.contains(peopleTrace.Person_1__c)) {
+                primaryContacts.add(peopleTrace.Person_1__c);
+            }
+
+            if (!personIds.contains(peopleTrace.Person_2__c)) {
+                primaryContacts.add(peopleTrace.Person_2__c);
+            }  
+        } 
+        return primaryContacts;
+    }
+
+    // get secondary contacts of the primary contacts passed in
+    // secondary contacts = contacts of the primaryIds
+    // must add condition to only get contacts that have been in contact with the last 10 days
+    // health status †hat is not red, orange and yellow
+    public static Set<Id> getSecondaryContacs(Set<Id> primaryContactsIds) {
+        List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
+                                                FROM People_Tracing__c
+                                                WHERE (Person_1__c IN :primaryContactsIds OR Person_2__c IN :primaryContactsIds)
+                                                AND Contact_Type_c = 'Other'
+                                                AND Contact_Date__c = LAST_N_DAYS :10
+                                                AND (Person_1__r.Health_Status__c = 'Green' OR Person_2__r.Health_Status__c = 'Green')];
+
+        Set<Id> secondaryContacts = new Set<Id>();                        
+        for (People_Tracing__c peopleTrace : peopleTraces) {
+            if (!primaryContactsIds.contains(peopleTrace.Person_1__c)) {
+                secondaryContacts.add(peopleTrace.Person_1__c);
+            }
+
+            if (!primaryContactsIds.contains(peopleTrace.Person_2__c)) {
+                secondaryContacts.add(peopleTrace.Person_2__c);
+            }  
+        } 
+        return secondaryContacts;
+    }
+    
+
 }

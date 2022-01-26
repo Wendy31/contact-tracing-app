@@ -19,27 +19,27 @@ public with sharing class CTPersonTriggerHandler {
             
         }
     }
-    
 
-    public static void afterUpdate(List<Person__c> oldPersons, Map<Id,Person__c> newPersonsMap){
-        // 1. if person's health status changes update the Red Score and Status of all locations they visited last 10 days
-        Set<Id> personIds = new Set<Id>();
-        for (Person__c person : oldPersons) {
-            personIds.add(person.Id);
+    public static void afterUpdate(List<Person__c> newPersons, Map<Id,Person__c> oldPersonsMap){
+        Set<Id> healthStatusChange = new Set<Id> (); // stores all people with any status change
+        Set<Id> redStatus = new Set<Id> (); // stores people with only red status
+        for (Person__c person : newPersons) {
+            // if the health status changes to anything
+            if (person.Health_Status__c !=  oldPersonsMap.get(person.Id).Health_Status__c){
+                healthStatusChange.add(person.Id);  
+            }
+
+            // if the health status changes to red, update locations visited in the last 10 days
+            // if status = red and old record was not red before 
+            if (person.Health_Status__c == 'Red' && oldPersonsMap.get(person.Id).Health_Status__c != 'Red'){
+                redStatus.add(person.Id);
+            }  
         }
 
-        Location_Tracing__c traces = [SELECT Id, Person__c, Location__c 
-                                        FROM Location_Tracing__c
-                                        WHERE Person__c IN :personIds];
-
-
-        
-        // 2. if person's health status changes to Red 
-        //// set cohabitants status = orange
-        //// primary contacts = orange
-        //// neighbours = yellow
-        //// secondary contacts = yellow
-        //// update Red Score and Status of all locations they visited the last 10 days
-
+        Set<Id> orangeStatus = new Set<Id> (); 
+        Set<Id> yellowStatus = new Set<Id> (); 
     }
+    
+
+   
 }
