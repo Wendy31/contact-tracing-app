@@ -67,7 +67,7 @@ public with sharing class CTPersonController {
     // these people can not be their own cohabitant, so check for any duplicates
     // only get cohabitants that are not already red or orange statuses
     // check for both person 1 and person 2
-    public static Set<Id> getCohabitants(Set<Id> personIds) {
+    public static Set<Id> getCohabitants(Set<Id> personIds, Set<Id> alreadyProcessed) {
         List<String> healthStatuses = new List<String>{'Green', 'Yellow'};
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
@@ -78,19 +78,22 @@ public with sharing class CTPersonController {
         // make sure we dont return the same person as their own cohabitant
         Set<Id> cohabitantsId = new Set<Id>();                        
         for (People_Tracing__c peopleTrace : peopleTraces) {
-            if (!personIds.contains(peopleTrace.Person_1__c)) {
+            // if not in alreadyProcessed set, then process these persons as cohabitants but add them in alreadyProcessed once done to build the set on
+            if (!alreadyProcessed.contains(peopleTrace.Person_1__c)) {
                 cohabitantsId.add(peopleTrace.Person_1__c);
+                alreadyProcessed.add(peopleTrace.Person_1__c);
             }
 
-            if (!personIds.contains(peopleTrace.Person_2__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_2__c)) {
                 cohabitantsId.add(peopleTrace.Person_2__c);
+                alreadyProcessed.add(peopleTrace.Person_2__c);
             }  
         } 
         return cohabitantsId;
     }
 
     // get neightbours of the personIds passed in
-    public static Set<Id> getNeighbours(Set<Id> personIds) {
+    public static Set<Id> getNeighbours(Set<Id> personIds, Set<Id> alreadyProcessed) {
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
                                                 WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
@@ -100,12 +103,14 @@ public with sharing class CTPersonController {
         // make sure we dont return the same person as their own neighbour
         Set<Id> neighboursId = new Set<Id>();                        
         for (People_Tracing__c peopleTrace : peopleTraces) {
-            if (!personIds.contains(peopleTrace.Person_1__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_1__c)) {
                 neighboursId.add(peopleTrace.Person_1__c);
+                alreadyProcessed.add(peopleTrace.Person_1__c);
             }
 
-            if (!personIds.contains(peopleTrace.Person_2__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_2__c)) {
                 neighboursId.add(peopleTrace.Person_2__c);
+                alreadyProcessed.add(peopleTrace.Person_2__c);
             }  
         } 
         return neighboursId;
@@ -115,7 +120,7 @@ public with sharing class CTPersonController {
     // primary contact = other
     // must add condition to only get contacts that have been in contact with the last 10 days
     // health status †hat is not red and orange
-    public static Set<Id> getPrimaryContacs(Set<Id> personIds) {
+    public static Set<Id> getPrimaryContacs(Set<Id> personIds, Set<Id> alreadyProcessed) {
         List<String> healthStatuses = new List<String>{'Green', 'Yellow'};
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
@@ -126,12 +131,14 @@ public with sharing class CTPersonController {
 
         Set<Id> primaryContacts = new Set<Id>();                        
         for (People_Tracing__c peopleTrace : peopleTraces) {
-            if (!personIds.contains(peopleTrace.Person_1__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_1__c)) {
                 primaryContacts.add(peopleTrace.Person_1__c);
+                alreadyProcessed.add(peopleTrace.Person_1__c);
             }
 
-            if (!personIds.contains(peopleTrace.Person_2__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_2__c)) {
                 primaryContacts.add(peopleTrace.Person_2__c);
+                alreadyProcessed.add(peopleTrace.Person_2__c);
             }  
         } 
         return primaryContacts;
@@ -141,7 +148,7 @@ public with sharing class CTPersonController {
     // secondary contacts = contacts of the primaryIds
     // must add condition to only get contacts that have been in contact with the last 10 days
     // health status †hat is not red, orange and yellow
-    public static Set<Id> getSecondaryContacs(Set<Id> primaryContactsIds) {
+    public static Set<Id> getSecondaryContacs(Set<Id> primaryContactsIds, Set<Id> alreadyProcessed) {
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
                                                 WHERE (Person_1__c IN :primaryContactsIds OR Person_2__c IN :primaryContactsIds)
@@ -151,12 +158,14 @@ public with sharing class CTPersonController {
 
         Set<Id> secondaryContacts = new Set<Id>();                        
         for (People_Tracing__c peopleTrace : peopleTraces) {
-            if (!primaryContactsIds.contains(peopleTrace.Person_1__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_1__c)) {
                 secondaryContacts.add(peopleTrace.Person_1__c);
+                alreadyProcessed.add(peopleTrace.Person_1__c);
             }
 
-            if (!primaryContactsIds.contains(peopleTrace.Person_2__c)) {
+            if (!alreadyProcessed.contains(peopleTrace.Person_2__c)) {
                 secondaryContacts.add(peopleTrace.Person_2__c);
+                alreadyProcessed.add(peopleTrace.Person_2__c);
             }  
         } 
         return secondaryContacts;

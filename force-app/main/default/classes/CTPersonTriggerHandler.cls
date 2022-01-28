@@ -36,10 +36,24 @@ public with sharing class CTPersonTriggerHandler {
             }  
         }
 
+        // store people in the correct colour statuses
+        // cohabitants/ pimary contacts = Orange
+        // neighbours/ secondary contacts = yellow
+        // dont process people that have already been processed 
+        Set<Id> alreadyProcessed = new Set<Id>();
         Set<Id> orangeStatus = new Set<Id> (); 
         Set<Id> yellowStatus = new Set<Id> (); 
-    }
-    
 
-   
+        // call methods and pass in all red contacts 
+        orangeStatus.addAll(CTPersonController.getCohabitants(redStatus, alreadyProcessed));
+        Set<Id> primaryContacts = CTPersonController.getPrimaryContacs(redStatus, alreadyProcessed);
+        orangeStatus.addAll(primaryContacts);
+        yellowStatus.addAll(CTPersonController.getNeighbours(redStatus, alreadyProcessed));
+        // pass in the primary contacts to secondary method
+        yellowStatus.addAll(CTPersonController.getSecondaryContacs(primaryContacts, alreadyProcessed));
+        
+
+    
+    }
+ 
 }
