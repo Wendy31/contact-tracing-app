@@ -56,6 +56,7 @@ public with sharing class CTLocationTracingController {
         // 3. create new empty Set as value
         // 4. use key from map to find locationTracing records and put all its PersonIds in Map set                          
         Map<Id,Set<Id>> mapOfExistingRecs = new Map<ID,Set<Id>>();
+        List<Location_Tracing__c> duplicates = new List<Location_Tracing__c>();
         if (existingRecords != null && existingRecords.size() > 0) {
             for(Location_Tracing__c trace : existingRecords){
                 if (!mapOfExistingRecs.containsKey(trace.Location__c)) {
@@ -65,7 +66,6 @@ public with sharing class CTLocationTracingController {
                 mapOfExistingRecs.get(trace.Location__c).add(trace.Person__c);   
             }  
 
-            List<Location_Tracing__c> duplicates = new List<Location_Tracing__c>();
             // loop over newLoctionTraces and check if locationId and personId are found in Map
             // if record contains BOTH locationId and PersonId then its a duplicate
             for (Location_Tracing__c trace : newLoctionTraces) {

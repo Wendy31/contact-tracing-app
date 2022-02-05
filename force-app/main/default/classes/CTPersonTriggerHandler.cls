@@ -43,6 +43,7 @@ public with sharing class CTPersonTriggerHandler {
         Set<Id> alreadyProcessed = new Set<Id>();
         Set<Id> orangeStatus = new Set<Id> (); 
         Set<Id> yellowStatus = new Set<Id> (); 
+        List<Person__c> peopleToUpdate = new List<Person__c>();
 
         // call methods and pass in all red contacts 
         orangeStatus.addAll(CTPersonController.getCohabitants(redStatus, alreadyProcessed));
@@ -51,9 +52,31 @@ public with sharing class CTPersonTriggerHandler {
         yellowStatus.addAll(CTPersonController.getNeighbours(redStatus, alreadyProcessed));
         // pass in the primary contacts to secondary method
         yellowStatus.addAll(CTPersonController.getSecondaryContacs(primaryContacts, alreadyProcessed));
-        
 
-    
+        // once all groups are sorted into color lists
+        // we need to use IDs in list to update their status
+        // store in list and mass update
+        for (Id pId : orangeStatus) {
+            peopleToUpdate.add(new Person__c(Id = pId, Health_Status__c = 'Orange'));
+        }
+
+        for (Id pId : yellowStatus) {
+            peopleToUpdate.add(new Person__c(Id = pId, Health_Status__c = 'Yellow'));
+        }
+        if (peopleToUpdate != null && peopleToUpdate.size() > 0) {
+            update peopleToUpdate;
+        } 
+
+        // update all persons' location Red Score and Status
+        // call method and pass in all people who had a status change
+        // from LocationTracing, get all location IDs
+
+        List <Location_Tracing__c> locationTraces = CTLocationTracingController.getLocationsByPersonIds(healthStatusChange);
+        if (locationTraces !=null && locationTraces.size() > 0) {
+            Set<Id> locationIds = new Set<Id>();
+            for (Location_Tracing__c trace : locationTraces) {
+                locationIds.add(trace.Location__c);
+            }
+        }
     }
- 
 }

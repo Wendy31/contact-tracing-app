@@ -39,6 +39,41 @@ public with sharing class CTLocationController {
         
     }
 
+    public static void updateRedScore(Set<Id> locationIds){
+        List<Location__c> locationToUpdate = new List<Location__c>();
+        // get all locations where there has been people with status change (in locationIds) and where red people visited and return the count 
+        // group by location i.e. Swansea = 10
+        List<AggregateResult> redPeoplePerLocation = [SELECT Location__c, COUNT(Id) total
+                                                    FROM Location_Tracing__c
+                                                    WHERE Person__r.Health_Status__c = 'Red'
+                                                    AND Visit_Date__c = LAST_N_DAYS: 10
+                                                    AND Location__c IN :locationIds
+                                                    GROUP BY Location__c];
+
+        // loop thru agg list to build new location with Id, recScore, Status
+        for (AggregateResult ar : redPeoplePerLocation) {
+            Integer redScore = (Integer)ar.get('total');
+            String locationId = (String)ar.get('Location__c');
+            String status = getStatus(redScore);
+            locationToUpdate.add(new Location__c(Id = locationId, Red_Score__c = redScore, Status__c = status));
+        }
+        if (locationToUpdate != null && locationToUpdate.size() > 0) {
+            update locationToUpdate;
+        }
+    }
+
+    public static String getStatus(Integer redScore){
+        if (redScore == 0) {
+            return 'Green';
+        } else if (redScore <= 5) {
+            return 'Yellow';
+        } else if (redScore <= 10) {
+            return 'Orange';
+        } else {
+            return 'Red';
+        } 
+    }
+
     public static Map<String,Integer> getStatusCount(){
         // query to find number of locations in each health status
         // store result in map, the count of locations in each status
@@ -53,4 +88,5 @@ public with sharing class CTLocationController {
         }
         return mapOfStatusCount;
     }
+
 }
