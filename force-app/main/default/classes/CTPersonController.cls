@@ -72,7 +72,7 @@ public with sharing class CTPersonController {
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
                                                 WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
-                                                AND Contact_Type_c = 'Cohabitant'
+                                                AND Contact_Type__c = 'Cohabitant'
                                                 AND (Person_1__r.Health_Status__c IN :healthStatuses OR Person_2__r.Health_Status__c IN :healthStatuses)];
 
         // make sure we dont return the same person as their own cohabitant
@@ -97,7 +97,7 @@ public with sharing class CTPersonController {
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
                                                 WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
-                                                AND Contact_Type_c = 'Neighbour'
+                                                AND Contact_Type__c = 'Neighbour'
                                                 AND (Person_1__r.Health_Status__c = 'Green' OR Person_2__r.Health_Status__c = 'Green')];
 
         // make sure we dont return the same person as their own neighbour
@@ -125,8 +125,8 @@ public with sharing class CTPersonController {
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
                                                 WHERE (Person_1__c IN :personIds OR Person_2__c IN :personIds)
-                                                AND Contact_Type_c = 'Other'
-                                                AND Contact_Date__c = LAST_N_DAYS :10
+                                                AND Contact_Type__c = 'Other'
+                                                AND Contact_Date__c = LAST_N_DAYS:10
                                                 AND (Person_1__r.Health_Status__c IN :healthStatuses OR Person_2__r.Health_Status__c IN :healthStatuses)];
 
         Set<Id> primaryContacts = new Set<Id>();                        
@@ -152,8 +152,8 @@ public with sharing class CTPersonController {
         List<People_Tracing__c> peopleTraces = [SELECT Id, Person_1__c, Person_2__c
                                                 FROM People_Tracing__c
                                                 WHERE (Person_1__c IN :primaryContactsIds OR Person_2__c IN :primaryContactsIds)
-                                                AND Contact_Type_c = 'Other'
-                                                AND Contact_Date__c = LAST_N_DAYS :10
+                                                AND Contact_Type__c = 'Other'
+                                                AND Contact_Date__c = LAST_N_DAYS:10
                                                 AND (Person_1__r.Health_Status__c = 'Green' OR Person_2__r.Health_Status__c = 'Green')];
 
         Set<Id> secondaryContacts = new Set<Id>();                        
