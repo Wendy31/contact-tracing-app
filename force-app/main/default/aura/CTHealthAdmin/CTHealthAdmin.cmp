@@ -5,11 +5,11 @@
         <div class="slds-media">
           <div class="slds-media__figure">
             <span class="slds-icon_container slds-icon-standard-opportunity">
-              <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+             <!-- <svg class="slds-icon slds-page-header" aria-hidden="true">
                 <use
                   xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#opportunity"
-                ></use>
-              </svg>
+                ></use> 
+              </svg> -->
             </span>
           </div>
           <div class="slds-media__body">
@@ -31,12 +31,7 @@
       <div class="slds-page-header__col-actions">
         <div class="slds-page-header__controls">
           <div class="slds-page-header__control">
-            <button
-              class="slds-button slds-button_neutral slds-button_stateful slds-not-selected"
-              aria-live="assertive"
-              aria-pressed="false"
-            >
-            </button>
+           
           </div>
           <div class="slds-page-header__control">
                 <button class="slds-button slds-button_neutral">Add New</button>
@@ -53,42 +48,31 @@
             </div>
             <div
               class="slds-truncate"
-              title="Description that demonstrates truncation with a long text field."
+              title="Number of green status."
             >
-              Description that demonstrates truncation with a long text field.
+              5
             </div>
           </li>
           <li class="slds-page-header__detail-block">
-            <div class="slds-text-title slds-truncate" title="Field 2 (3)">
+            <div class="slds-text-title slds-truncate" title="Field 2">
               Yellow
-              <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
-                <button
-                  class="slds-button slds-button_icon slds-button_icon"
-                  aria-haspopup="true"
-                  title="More Actions"
-                >
-                  <svg
-                    class="slds-button__icon slds-button__icon_small"
-                    aria-hidden="true"
-                  >
-                    <use
-                      xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#down"
-                    ></use>
-                  </svg>
-                  <span class="slds-assistive-text">More Actions</span>
-                </button>
-              </div>
             </div>
-            <div class="slds-truncate" title="Multiple Values">
-              Multiple Values
+            <div
+              class="slds-truncate"
+              title="Number of yellow status."
+            >
+              5
             </div>
           </li>
           <li class="slds-page-header__detail-block">
             <div class="slds-text-title slds-truncate" title="Field 3">
               Orange
             </div>
-            <div class="slds-truncate" title="Hyperlink">
-              <a href="#">Hyperlink</a>
+            <div
+              class="slds-truncate"
+              title="Number of orange status."
+            >
+              5
             </div>
           </li>
           <li class="slds-page-header__detail-block">
@@ -97,11 +81,11 @@
             </div>
             <div
               class="slds-truncate"
-              title="Description (2-line truncation—must use JS to truncate)."
+              title="Number of red status."
             >
-              Description (2-line truncati...
+              5
             </div>
-          </li>
+        </li>
         </ul>
       </div>
     </div>
