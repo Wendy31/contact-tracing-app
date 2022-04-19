@@ -1,79 +1,20 @@
 <aura:component implements="force:appHostable">
+  <div class="container">
     <lightning:layout multipleRows="true">
-        <lightning:layoutItem size="12">
-            <!--Layout Item content goes here -->
-        
-  <div class="slds-page-header slds-page-header_record-home">
-    <div class="slds-page-header__row">
-      <div class="slds-page-header__col-title">
-        <div class="slds-media">
-          <div class="slds-media__figure">
-            <span class="slds-icon_container slds-icon-standard-opportunity">
-              <lightning:icon
-                iconName="standard:queue"
-                alternativeText="Contact Tracing"
-                title="Contact Tracing"
-              />
-            </span>
-          </div>
-          <div class="slds-media__body">
-            <div class="slds-page-header__name">
-              <div class="slds-page-header__name-title">
-                <h1>
-                  <span>Contact Tracing</span>
-                  <span
-                    class="slds-page-header__title slds-truncate"
-                    title="Person View"
-                    >Person View</span
-                  >
-                </h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="slds-page-header__col-actions">
-        <div class="slds-page-header__controls">
-          <div class="slds-page-header__control">
-            <ul class="slds-button-group-list">
-              <li>
-                <button class="slds-button slds-button_neutral">Add New</button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="slds-page-header__row slds-page-header__row_gutters">
-      <div class="slds-page-header__col-details">
-        <ul class="slds-page-header__detail-row">
-          <li class="slds-page-header__detail-block">
-            <div class="" title="Green">Green</div>
-            <div class="" title="">5</div>
-          </li>
-          <li class="slds-page-header__detail-block">
-            <div class="" title="Yellow">Yellow</div>
-            <div class="" title="">5</div>
-          </li>
-          <li class="slds-page-header__detail-block">
-            <div class="" title="Orange">Orange</div>
-            <div class="" title="">5</div>
-          </li>
-          <li class="slds-page-header__detail-block">
-            <div class="" title="Red">Red</div>
-            <div class="" title="">5</div>
-          </li>
-        </ul>
-      </div>
-    </div>
+      <lightning:layoutItem size="12">
+        <!--use HealthHeader cmp inside this cmp -->
+        <c:CTHealthHeader />
+      </lightning:layoutItem>
+      <lightning:layoutItem size="12">
+        <lightning:tabset variant="vertical">
+          <lightning:tab label="Person View" id="person_view">
+            Person View
+          </lightning:tab>
+          <lightning:tab label="Location View" id="location_view">
+            Location View
+          </lightning:tab>
+        </lightning:tabset>
+      </lightning:layoutItem>
+    </lightning:layout>
   </div>
-</lightning:layoutItem>
-<lightning:layoutItem size="12">
-    <lightning:tabset variant="vertical">
-        <lightning:tab label="Person View" id="person_view"> Person View </lightning:tab>
-        <lightning:tab label="Location View" id="location_view"> Location View </lightning:tab>
-      </lightning:tabset>
-   
-</lightning:layoutItem>
-</lightning:layout>
 </aura:component>

@@ -1,2 +1,4 @@
-.THIS {
+.THIS.container {
+    margin: -12px;
+    background-color: whitesmoke; 
 }
