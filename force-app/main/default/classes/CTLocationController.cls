@@ -78,15 +78,17 @@ public with sharing class CTLocationController {
         // query to find number of locations in each health status
         // store result in map, the count of locations in each status
         // return map
-        Map<String,Integer> mapOfStatusCount = new Map<String,Integer>();
-
-        for (AggregateResult ar : [SELECT Status__c, COUNT(Id) total
-                                    FROM Location__c
-                                    GROUP BY Status__c]) {
-
-            mapOfStatusCount.put((String)ar.get('Status__c'), (Integer)ar.get('total'));
+        AggregateResult[] groupResult = [SELECT Status__c, COUNT(Id) total // must give alias to use aggregated fields
+                                            FROM Location__c
+                                            GROUP BY Status__c];
+        if (groupResult != null && groupResult.size() > 0) {
+            Map<String, Integer> mapOfHealthSatusCount = new Map<String,Integer>();
+            for(AggregateResult result : groupResult){
+                mapOfHealthSatusCount.put((String)result.get('Status__c'), (Integer)result.get('total')); // typecas from type object to correct data type, as get method returns type object
+            }
+            return mapOfHealthSatusCount;
         }
-        return mapOfStatusCount;
+        return null;
     }
 
 }

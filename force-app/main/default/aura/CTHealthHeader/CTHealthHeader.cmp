@@ -1,7 +1,10 @@
-<aura:component>
+<aura:component controller="CTHealthHeaderController">
     <!--takes attributes from parent cmp as they are public attributes-->
     <aura:attribute name="scope" type="String" default="person" />
     <aura:attribute name="headerTitle" type="String" default="Person View" />
+    <aura:attribute name="count" type="Object" default="" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <div class="slds-page-header slds-page-header_record-home">
         <div class="slds-page-header__row">
@@ -53,19 +56,19 @@
             <ul class="slds-page-header__detail-row">
               <li class="slds-page-header__detail-block">
                 <div class="header-item green" title="Green">Green</div>
-                <div class="header-item green" title="">5</div>
+                <div class="header-item green" title="">{!v.count.Green}</div>
               </li>
               <li class="slds-page-header__detail-block">
                 <div class="header-item yellow" title="Yellow">Yellow</div>
-                <div class="header-item yellow" title="">5</div>
+                <div class="header-item yellow" title="">{!v.count.Yellow}</div>
               </li>
               <li class="slds-page-header__detail-block">
                 <div class="header-item orange" title="Orange">Orange</div>
-                <div class="header-item orange" title="">5</div>
+                <div class="header-item orange" title="">{!v.count.Orange}</div>
               </li>
               <li class="slds-page-header__detail-block">
                 <div class="header-item red" title="Red">Red</div>
-                <div class="header-item red" title="">5</div>
+                <div class="header-item red" title="">{!v.count.Red}</div>
               </li>
             </ul>
           </div>
