@@ -3,7 +3,7 @@ public with sharing class CTLocationController {
         // query location records all fields, limit 100
         // sort by status update desc
         // return list locations
-        return [SELECT Id, Address__c, Pincode__c, Red_Score__c, Status_Update_Date__c, Status__c
+        return [SELECT Id, Name, Address__c, Pincode__c, Red_Score__c, Status_Update_Date__c, Status__c
                 FROM Location__c 
                 ORDER BY Status_Update_Date__c DESC NULLS LAST
                 LIMIT 100];

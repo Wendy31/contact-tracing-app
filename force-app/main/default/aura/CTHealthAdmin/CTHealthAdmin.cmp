@@ -6,16 +6,16 @@
     <lightning:layout multipleRows="true">
       <lightning:layoutItem size="12">
         <!--use HealthHeader cmp inside this cmp -->
-        <c:CTHealthHeader headerTitle="{!v.headerTitle}" scope="{!v.scope}"/>
+        <c:CTHealthHeader headerTitle="{!v.headerTitle}" scope="{!v.scope}" aura:id="health-header"/>
       </lightning:layoutItem>
       <lightning:layoutItem size="12">
         <!--onselect a tab will change header title-->
         <lightning:tabset onselect="{!c.tabSelectHandler}" variant="vertical">
           <lightning:tab label="Person View" id="person">
-            Person View
+            <c:CTRecentChanges scope="person"/>
           </lightning:tab>
           <lightning:tab label="Location View" id="location">
-            Location View
+            <c:CTRecentChanges scope="location"/>
           </lightning:tab>
         </lightning:tabset>
       </lightning:layoutItem>

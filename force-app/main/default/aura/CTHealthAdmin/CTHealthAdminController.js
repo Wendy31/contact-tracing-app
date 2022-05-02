@@ -10,5 +10,9 @@
         }
         // then set scope
         component.set("v.scope", selectedTabId);
+
+        // call child aura method from HeathHeader cmp, get count for person/ location view tabs
+        const healthHeaderCmp = component.find("health-header");
+        healthHeaderCmp.fetchCount();
     }
 })

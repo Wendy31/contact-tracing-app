@@ -6,6 +6,8 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+    <aura:method name="fetchCount" action="{!c.doInit}" description="Fetch count for person view or location view"></aura:method>
+
     <div class="slds-page-header slds-page-header_record-home">
         <div class="slds-page-header__row">
           <div class="slds-page-header__col-title">
