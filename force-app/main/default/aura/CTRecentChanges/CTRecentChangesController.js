@@ -21,5 +21,6 @@
     }
         // call helper method that sets data to datatable right after table is constructed above
         helper.fetchRecentHealthChanges(component);
+        // COMMENT ADDED
     }
 });
